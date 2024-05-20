@@ -1,0 +1,54 @@
+---
+title: "Map with R Markdown and Leaflet"
+author: "may4026"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This document was created on `r format(Sys.Date(), '%B %d, %Y')`. It features an interactive map of Europe created with the Leaflet package in R.
+
+## Leaflet Map
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Load necessary libraries
+library(leaflet)
+library(dplyr)
+
+# Define some locations in Europe
+locations <- data.frame(
+  name = c("Berlin", "Paris", "Rome", "Madrid", "Vienna"),
+  lat = c(52.52, 48.8566, 41.9028, 40.4168, 48.2082),
+  lng = c(13.405, 2.3522, 12.4964, -3.7038, 16.3738)
+)
+
+# Create a basic map centered on Europe
+map <- leaflet() %>%
+  addTiles() %>%
+  setView(lng = 10, lat = 50, zoom = 4) %>%
+  
+  # Add markers for each location
+  addMarkers(data = locations, ~lng, ~lat, popup = ~name) %>%
+  
+  # Add circle markers with different radius and colors
+  addCircles(lng = 13.405, lat = 52.52, radius = 50000, color = "blue", fillOpacity = 0.5, popup = "Berlin") %>%
+  addCircles(lng = 2.3522, lat = 48.8566, radius = 60000, color = "green", fillOpacity = 0.5, popup = "Paris") %>%
+  addCircles(lng = 12.4964, lat = 41.9028, radius = 70000, color = "red", fillOpacity = 0.5, popup = "Rome") %>%
+  addCircles(lng = -3.7038, lat = 40.4168, radius = 80000, color = "purple", fillOpacity = 0.5, popup = "Madrid") %>%
+  addCircles(lng = 16.3738, lat = 48.2082, radius = 40000, color = "orange", fillOpacity = 0.5, popup = "Vienna") %>%
+  
+  # Add layers control
+  addLayersControl(
+    overlayGroups = c("Markers", "Circles"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+
+# Display the map
+map
+```
+
